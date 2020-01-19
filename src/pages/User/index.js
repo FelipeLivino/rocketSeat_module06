@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import api from '../../services/api';
 
 import {
@@ -49,7 +49,7 @@ export default class User extends Component {
 
     render() {
         const { navigation } = this.props;
-        const { stars } = this.state;
+        const { stars, loading } = this.state;
         const user = navigation.getParam('user');
 
         return (
@@ -59,21 +59,25 @@ export default class User extends Component {
                     <Name>{user.name}</Name>
                     <Bio>{user.bio}</Bio>
                 </Header>
-                <Starts
-                    data={stars}
-                    keyExtractor={star => String(star.id)}
-                    renderItem={({ item }) => (
-                        <Starred>
-                            <OwnerAvatar
-                                source={{ uri: item.owner.avatar_url }}
-                            />
-                            <Info>
-                                <Title>{item.name}</Title>
-                                <Author>{item.owner.login}</Author>
-                            </Info>
-                        </Starred>
-                    )}
-                />
+                {loading ? (
+                    <ActivityIndicator color="#aaa" />
+                ) : (
+                    <Starts
+                        data={stars}
+                        keyExtractor={star => String(star.id)}
+                        renderItem={({ item }) => (
+                            <Starred>
+                                <OwnerAvatar
+                                    source={{ uri: item.owner.avatar_url }}
+                                />
+                                <Info>
+                                    <Title>{item.name}</Title>
+                                    <Author>{item.owner.login}</Author>
+                                </Info>
+                            </Starred>
+                        )}
+                    />
+                )}
             </Container>
         );
     }
